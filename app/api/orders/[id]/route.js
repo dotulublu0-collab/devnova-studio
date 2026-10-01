@@ -1,0 +1,2 @@
+import {NextResponse} from 'next/server';import {prisma} from '../../../../lib/prisma';
+export async function GET(req,{params}){const {id}=await params;const o=await prisma.order.findUnique({where:{id:id.toUpperCase()},select:{id:true,type:true,description:true,price:true,status:true,createdAt:true,updatedAt:true}});return o?NextResponse.json(o):NextResponse.json({error:'Не найдено'},{status:404})}

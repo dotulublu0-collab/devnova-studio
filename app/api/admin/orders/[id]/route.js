@@ -1,0 +1,3 @@
+import {NextResponse} from 'next/server';import {cookies} from 'next/headers';import {prisma} from '../../../../../lib/prisma';import {verify,COOKIE} from '../../../../../lib/auth';
+const allowed=['Новый','Обсуждение','Ожидает оплату','В разработке','Тестирование','Готово','Отменён'];
+export async function PATCH(req,{params}){const c=await cookies();if(!verify(c.get(COOKIE)?.value))return NextResponse.json({error:'Unauthorized'},{status:401});const {status}=await req.json();if(!allowed.includes(status))return NextResponse.json({error:'Bad status'},{status:400});const {id}=await params;return NextResponse.json(await prisma.order.update({where:{id},data:{status}}))}

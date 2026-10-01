@@ -1,0 +1,4 @@
+import {NextResponse} from 'next/server';import {prisma} from '../../../lib/prisma';
+const prices={website:25000,telegram:15000,discord:10000,backend:20000,gaming:12000,automation:10000};
+const extras=[0,5000,10000,15000];
+export async function POST(req){try{const b=await req.json();if(!prices[b.type]||!b.name?.trim()||!b.contact?.trim()||!b.description?.trim())return NextResponse.json({error:'Заполните все поля'},{status:400});const extra=extras.includes(Number(b.extra))?Number(b.extra):0;let id;do{id='DN-'+crypto.randomUUID().slice(0,8).toUpperCase()}while(await prisma.order.findUnique({where:{id}}));const o=await prisma.order.create({data:{id,type:b.type,name:b.name.trim(),contact:b.contact.trim(),description:b.description.trim(),price:prices[b.type]+extra}});return NextResponse.json({ok:true,id:o.id})}catch(e){return NextResponse.json({error:'Ошибка сервера'},{status:500})}}

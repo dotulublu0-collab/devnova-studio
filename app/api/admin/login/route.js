@@ -1,0 +1,2 @@
+import {NextResponse} from 'next/server';import {sign,COOKIE} from '../../../../lib/auth';
+export async function POST(req){const {login,password}=await req.json();if(login!==process.env.ADMIN_LOGIN||password!==process.env.ADMIN_PASSWORD)return NextResponse.json({error:'Неверный логин или пароль'},{status:401});const r=NextResponse.json({ok:true});r.cookies.set(COOKIE,sign(),{httpOnly:true,secure:process.env.NODE_ENV==='production',sameSite:'lax',path:'/',maxAge:604800});return r}

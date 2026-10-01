@@ -1,0 +1,2 @@
+import {NextResponse} from 'next/server';import {cookies} from 'next/headers';import {prisma} from '../../../../lib/prisma';import {verify,COOKIE} from '../../../../lib/auth';
+export async function GET(){const c=await cookies();if(!verify(c.get(COOKIE)?.value))return NextResponse.json({error:'Unauthorized'},{status:401});return NextResponse.json(await prisma.order.findMany({orderBy:{createdAt:'desc'}}))}
